@@ -50,7 +50,8 @@ requisitos()
 
 print(time.asctime(), f'Início de {sys.argv[0]}:')
 
-soup_pagina_dados_abertos = BeautifulSoup(requests.get(url_dados_abertos).text, features="lxml")
+# Security concern: Add explicit timeout (30 seconds) to prevent infinite waiting/DoS
+soup_pagina_dados_abertos = BeautifulSoup(requests.get(url_dados_abertos, timeout=30).text, features="lxml")
 try:
     ultima_referencia = sorted([link.get('href') for link in soup_pagina_dados_abertos.find_all('a') if link.get('href').startswith('20')])[-1]
 except:
@@ -62,7 +63,8 @@ except:
 url = url_dados_abertos + ultima_referencia
 # page = requests.get(url)    
 # data = page.text
-soup = BeautifulSoup(requests.get(url).text, features="lxml")
+# Security concern: Add explicit timeout (30 seconds) to prevent infinite waiting/DoS
+soup = BeautifulSoup(requests.get(url, timeout=30).text, features="lxml")
 lista = []
 print('Relação de Arquivos em ' + url)
 for link in soup.find_all('a'):
