@@ -383,8 +383,9 @@ print('fim sqls...', time.asctime())
 
 qtde_cnpjs = engine.execute(text('select count(*) as contagem from estabelecimento;')).fetchone()[0]
 
-engine.execute(text(f"insert into _referencia (referencia, valor) values ('CNPJ', '{dataReferencia}')"))
-engine.execute(text(f"insert into _referencia (referencia, valor) values ('cnpj_qtde', '{qtde_cnpjs}')"))
+# Use parameterized query to prevent SQL injection
+engine.execute(text("insert into _referencia (referencia, valor) values ('CNPJ', :ref)"), {"ref": dataReferencia})
+engine.execute(text("insert into _referencia (referencia, valor) values ('cnpj_qtde', :ref)"), {"ref": str(qtde_cnpjs)})
 
 print('-'*20)
 print(f'As tabelas foram criadas no servidor {tipo_banco}.')
