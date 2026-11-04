@@ -1,0 +1,4 @@
+## 2026-11-04 - Parameterize metadata table insertions against SQL injection
+**Vulnerability:** The ingestion scripts (`dados_cnpj_mysql.py` and `dados_cnpj_postgres.py`) inserted reference metadata into `_referencia` using f-string interpolation (`f"insert into _referencia (referencia, valor) values ('CNPJ', '{dataReferencia}')"`), exposing database execution to SQL injection vulnerabilities if `dataReferencia` is manipulated or sourced from external inputs.
+**Learning:** Even internal metadata values derived from filenames or user prompts can be injection vectors when interpolated directly into raw SQL statements wrapped in `text(...)`.
+**Prevention:** Always use SQLAlchemy `text()` with parameterized bind parameters (e.g., `:ref` and `:val`) and pass values as a parameter dictionary instead of string interpolation.
